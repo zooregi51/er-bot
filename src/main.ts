@@ -1,15 +1,15 @@
 import * as Discord from 'discord.js';
 import dotenv from 'dotenv';
-import * as command from './service/command';
+import * as commandimpl from './service/command';
 
 dotenv.config();
 
-class Main {
+class DiscordBot {
   client = new Discord.Client();
-  cmd = new command.Command();
+  cmd = new commandimpl.Command();
   prefix = '!';
 
-  main() {
+  bot() {
     this.client.login(process.env.BOT_TOKEN);
     this.client.on('ready', () => {
       console.log('Bot is online');
@@ -30,5 +30,5 @@ class Main {
   }
 }
 
-const main = new Main();
-main.main();
+const dsbot = new DiscordBot();
+dsbot.bot();

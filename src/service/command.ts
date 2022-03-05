@@ -1,5 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
+import { ICommand } from './command.interface';
 
 dotenv.config();
 
@@ -8,7 +9,7 @@ const headers = {
   'x-api-key': process.env.API_KEY!,
 };
 
-export class Command {
+export class Command implements ICommand {
   public getUserNum(userName: string) {
     axios
       .get(
