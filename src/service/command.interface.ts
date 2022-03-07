@@ -1,4 +1,6 @@
+import { UserStats } from './user.interface';
+
 export interface ICommand {
-  getUserNum(userName: string): void;
-  getUserStats(userNum: any, seasonId: string): void;
+  getUserNum(userName: string): Promise<number>;
+  getUserStats(userNum: number, seasonId: number): Promise<any>;
 }

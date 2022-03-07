@@ -1,7 +1,7 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { ICommand } from './command.interface';
-
+import { User, UserStats } from './user.interface';
 dotenv.config();
 
 const headers = {
@@ -10,42 +10,33 @@ const headers = {
 };
 
 export class Command implements ICommand {
-  public getUserNum(userName: string) {
-    axios
-      .get(
-        encodeURI(`${process.env.BASE_URL}/v1/user/nickname?query=${userName}`),
-        {
-          headers,
-        },
-      )
-      .then((response) => {
-        console.log('getUserNum', response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        console.log('getUserNum', error);
-      })
-      .then((data) => {
-        console.log('data', data);
-        this.getUserStats(data.user.userNum, '0');
-      });
+  async getUserNum(userName: string): Promise<number> {
+    const res = await axios.get<User>(
+      encodeURI(`${process.env.BASE_URL}/v1/user/nickname?query=${userName}`),
+      {
+        headers,
+      },
+    );
+
+    const userNum = res.data.user.userNum;
+    return userNum;
   }
 
-  public getUserStats(userNum: any, seasonId: string) {
-    axios
-      .get(
-        encodeURI(
-          `${process.env.BASE_URL}/v1/user/stats/${userNum}/${seasonId}`,
-        ),
-        {
-          headers,
-        },
-      )
-      .then((response) => {
-        console.log('getUserStats', response.data);
-      })
-      .catch((error) => {
-        console.log('getUserStats', error);
-      });
+  async getUserStats(userNum: number, seasonId: number): Promise<any> {
+    const res = await axios.get<UserStats>(
+      encodeURI(`${process.env.BASE_URL}/v1/user/stats/${userNum}/${seasonId}`),
+      {
+        headers,
+      },
+    );
+
+    const userStatsJson = JSON.parse(JSON.stringify(res.data.userStats));
+    const userStatsArr = [];
+    for (const stat of userStatsJson) {
+      userStatsArr.push(stat);
+    }
+
+    console.log(userStatsArr);
+    return userStatsArr;
   }
 }
